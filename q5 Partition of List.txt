@@ -1,0 +1,112 @@
+Q) Given the head of a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.
+You should preserve the original relative order of the nodes in each of the two partitions.
+Input Format
+
+The first line of each test case or query contains the elements of the singly linked list separated by a single space.
+Remember/Consider :
+While specifying the list elements for input, -1 indicates the end of the singly linked list and hence, would never be a list element.
+
+Second line X value
+
+Constraints
+
+Time:- 1Sec
+Output Format
+
+Partion list as given
+Sample Input 0
+
+1 4 3 2 5 2 -1
+3
+Sample Output 0
+
+1 2 2 4 3 5
+Sample Input 1
+
+2 1 -1
+2
+Sample Output 1
+
+1 2
+
+code:
+
+import java.io.*;
+import java.util.*;
+
+class Node {
+    int data;
+    Node next;
+
+    public Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        int x = scanner.nextInt();
+
+        String[] nums = input.split(" ");
+        Node head = new Node(Integer.parseInt(nums[0]));
+        Node tail = head;
+
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i].equals("-1")) {
+                break;
+            }
+            Node newNode = new Node(Integer.parseInt(nums[i]));
+            tail.next = newNode;
+            tail = newNode;
+        }
+
+        head = partition(head, x);
+
+        while (head != null) {
+            System.out.print(head.data + " ");
+            head = head.next;
+        }
+    }
+
+    public static Node partition(Node head, int x) {
+        Node smallerHead = null, smallerTail = null;
+        Node greaterOrEqualHead = null, greaterOrEqualTail = null;
+
+        while (head != null) {
+            if (head.data < x) {
+                if (smallerHead == null) {
+                    smallerHead = head;
+                    smallerTail = head;
+                } else {
+                    smallerTail.next = head;
+                    smallerTail = head;
+                }
+            } else {
+                if (greaterOrEqualHead == null) {
+                    greaterOrEqualHead = head;
+                    greaterOrEqualTail = head;
+                } else {
+                    greaterOrEqualTail.next = head;
+                    greaterOrEqualTail = head;
+                }
+            }
+
+            head = head.next;
+        }
+
+        if (smallerHead == null) {
+            return greaterOrEqualHead;
+        }
+
+        smallerTail.next = greaterOrEqualHead;
+
+        if (greaterOrEqualHead != null) {
+            greaterOrEqualTail.next = null;
+        }
+
+        return smallerHead;
+    }
+}
